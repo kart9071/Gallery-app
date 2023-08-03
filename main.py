@@ -78,5 +78,14 @@ def delete_image(filename):
     else:
         return f'Image is not deleted {deleted_document}'
 
+@app.route('/edit_image/')
+def edit_image_page():
+    # Retrieve the imageURL from the query parameters
+    imageURL = request.args.get('imageURL', '')
+
+    # Render the edit_image.html template and pass the imageURL to the template
+    return render_template('edit_image.html', imagefile=imageURL)
+
+
 if __name__ == '__main__':
     app.run()

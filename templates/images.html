@@ -57,7 +57,7 @@
         <div class="swiper-wrapper">
             {% for imagefile in imagefiles %}
                 <div class="swiper-slide">
-                    <img src="{{ url_for('static', filename='images_output/' + imagefile) }}" alt="{{ imagefile }}">
+                    <img id="img{{ loop.index }}" src="{{ url_for('static', filename='images_output/' + imagefile) }}" alt="{{ imagefile }}" width="400" height="400">
                 </div>
             {% endfor %}
         </div>
@@ -82,10 +82,10 @@
             // Get the active slide index
             var activeIndex = swiper.activeIndex;
             // Get the image filename at the active index
-            var imagefile = "{{ imagefiles[activeIndex] }}";
-            // Now you can use the imagefile to perform the editing operation
-            console.log("Selected image for editing: " + imagefile);
-            // Replace the console.log with your actual editing logic
+            var imageElement=document.getElementById('img'+(activeIndex+1));
+            var imageURL=imageElement.src;
+            //move the location url_to /edit_image/<image> page
+            window.location.replace('/edit_image/?imageURL='+encodeURIComponent(imageURL));
         }
     </script>
 </body>
