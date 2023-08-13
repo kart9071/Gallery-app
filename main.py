@@ -2,9 +2,42 @@ from flask import Flask, render_template, request, send_file
 import os
 import base64
 from Database_connection import db
+import cv2
+import pickle
+from sklearn.feature_extraction.text import CountVectorizer
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.stem import PorterStemmer, WordNetLemmatizer
 
 app = Flask(__name__)
 app.debug = True
+
+punctuations=['!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~']
+stop_words = [
+    'i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves',
+    'you', 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself',
+    'she', 'her', 'hers', 'herself', 'it', 'its', 'itself', 'they', 'them', 'their',
+    'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', 'these',
+    'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has',
+    'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but',
+    'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with',
+    'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after',
+    'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over',
+    'under', 'again', 'further', 'then', 'once'
+]
+
+
+
+lemmatizer=WordNetLemmatizer()
+
+def tokenize_and_get_tokens(text):
+    tokens=word_tokenize(text)  # tokenizing each word in the text
+    token_numbers=[]
+    for i, token in enumerate(tokens,start=1):
+        if token not in punctuations and token.lower() not in stop_words:     #removing the special character that do not have any use on sentiment analysis
+            lemma=lemmatizer.lemmatize(token.lower())
+            token_numbers.append((i,token))
+    return token_numbers
 
 
 @app.route('/')
@@ -78,13 +111,39 @@ def delete_image(filename):
     else:
         return f'Image is not deleted {deleted_document}'
 
-@app.route('/edit_image/')
+@app.route('/edit_image/',methods=['POST'])
 def edit_image_page():
-    # Retrieve the imageURL from the query parameters
-    imageURL = request.args.get('imageURL', '')
+    imageURL = request.form.get('imageURL', '')
+    # Return a JSON response indicating success
+    return render_template("edit_images.html",imageURL=imageURL)
 
-    # Render the edit_image.html template and pass the imageURL to the template
-    return render_template('edit_image.html', imagefile=imageURL)
+#load the sentiment analysis model:
+with open("sentiment_model.pkl","rb") as model_file:
+    model=pickle.load(model_file)
+
+
+@app.route("/Sentiment")
+def home1():
+    return render_template("index.html")
+
+@app.route("/predict_sentiment",methods=["POST"])
+def predict_sentiment():
+    input_text = request.form["input_text"]
+    new_text = tokenize_and_get_tokens(input_text)
+    
+    # Load the CountVectorizer and model
+    with open("sentiment_model.pkl", "rb") as model_file:
+        model_and_function = pickle.load(model_file)
+        vectorizer = model_and_function["vectorizer"]
+        model = model_and_function["model"]
+    new_text_string = ' '.join([word for (_, word) in new_text])
+    # Transform the new text using the fitted vectorizer
+    preprocess = vectorizer.transform([new_text_string])
+    
+    # Make a prediction
+    prediction = model.predict(preprocess)[0]
+    
+    return render_template("index.html", predicted_sentiment=prediction, input_text=input_text)
 
 
 if __name__ == '__main__':

@@ -2,18 +2,17 @@
 <html>
 <head>
     <title>Edit Image</title>
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/edit_image.css',) }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/edit_image.css') }}">
     <script src="{{ url_for('static', filename='javascript/edit_image.js') }}"></script>
 </head>
 <body>
     <h1>Edit Image</h1>
-    <img id="selected-image" src="{{ imagefile }}" alt="Selected Image">
-    
-    <!-- Add buttons or other elements for image editing here -->
-    <!-- For example, you can add brightness adjustment buttons like in the previous code -->
-
-    <div>
-        <button class="edit-button" onclick="saveEditedImage()">Save Edited Image</button>
+    <div class="image-container">
+        <img id="selected-image" src="{{ imagefile }}" alt="Selected Image" height="500" width="500" draggable="true">
     </div>
+
+    <script>
+        // Add JavaScript code for cropping the image here
+    </script>
 </body>
 </html>

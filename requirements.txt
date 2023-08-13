@@ -1,5 +1,7 @@
 Flask
 pymongo
 Flask-WTF
-Pillow
 Jinja2
+pillow
+opencv-python
+scikit-image

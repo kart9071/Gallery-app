@@ -1,0 +1,55 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.swiper-container {
+    width: 70vw; /* Set the width of the swiper container to 80% of viewport width */
+    height: 40vh; /* Set the height of the swiper container to 80% of viewport height */
+    overflow: hidden; /* Hide overflowing images */
+    background-color: #007bff;
+}
+
+.swiper-wrapper {
+    display: flex;
+    transition: transform 0.3s ease-in-out; /* Add smooth transition for image movement */
+}
+
+.swiper-slide {
+    width: 40vw; /* Set the width of each slide to 80% of the container width */
+    height: 40vh; /* Set the height of each slide to 80% of the container height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 5 px solid #007bff;
+}
+
+.swiper-slide img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Maintain aspect ratio and fit the image within the container */
+}
+
+.edit-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    position: relative;
+    top:35px;
+}
+.back-button{
+    margin-top: 20px;
+    background-color: #007bff;
+    padding:10px 20px;
+    color: #fff;
+    top: 74px;
+    position: relative;
+}
