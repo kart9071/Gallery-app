@@ -1,16 +1,59 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Sentiment Analysis</title>
+    <!-- Add your other meta tags, title, and stylesheets here -->
+    <style>
+        body {
+            display: flex;
+            justify-content: center; /* Horizontally center content */
+            align-items: center; /* Vertically center content */
+            min-height: 100vh; /* Ensure the content covers at least the full viewport height */
+            margin: 0; /* Remove default margin */
+        }
+
+        .area {
+            /* Add your existing styling for the form and its elements */
+        }
+
+        .input-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .textarea-container {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        input.second {
+            /* Add your existing styling for the submit button */
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 10px;
+            position: relative;
+            top:94px;
+            left:-254px;
+        }
+        h1{
+            position: relative;
+            top:-270px;
+            left: 284px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Sentiment Analysis</h1>
-    <form action="/predict_sentiment" method="post">
-        <textarea name="input_text" rows="4" cols="50"></textarea><br><br>
-        <input type="submit" value="Analyze">
+    <h1>Sentiment Page</h1>
+    <form action="/predict_sentiment" method="post" class="area">
+        <div class="input-container">
+            <textarea name="input_text" rows="4" cols="50" class="area main" placeholder="Give your review here"></textarea>
+            <input type="submit" value="Analyze" class="area second">
+        </div>
     </form>
     {% if predicted_sentiment %}
-        <p>Predicted Sentiment: {{ predicted_sentiment }}</p>
+    <p>Predicted Sentiment: {{ predicted_sentiment }}</p>
     {% endif %}
 </body>
 </html>
