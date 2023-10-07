@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file, jsonify
 import os
 import base64
 from Database_connection import db
@@ -111,11 +111,6 @@ def delete_image(filename):
     else:
         return f'Image is not deleted {deleted_document}'
 
-@app.route('/edit_image/',methods=['POST'])
-def edit_image_page():
-    imageURL = request.form.get('imageURL', '')
-    # Return a JSON response indicating success
-    return render_template("edit_images.html",imageURL=imageURL)
 
 #load the sentiment analysis model:
 with open("sentiment_model.pkl","rb") as model_file:
@@ -146,5 +141,35 @@ def predict_sentiment():
     return render_template("index.html", predicted_sentiment=prediction, input_text=input_text)
 
 
+#To store the music to the mongo DB database
+
+@app.route('/music/',methods=['POST'])
+def add_music():
+    '''TO ADD THE MUSIC WE NEED TO USE THIS COMMAND 
+************************************************************************************************
+    curl.exe -X POST -H "Content-Type: application/json" -d '{
+    \"title\": \"Song2\",
+    \"genre\": \"song23\",
+    \"artist\": \"mahesh\",
+    \"duration\": \"2:52\" 
+    }' http://localhost:5000/music
+
+************************************************************************************************
+'''
+    musics={                                                            
+        "title":request.json['title'],
+        "genre":request.json['genre'],
+        "artist":request.json['artist'],
+        "duration":request.json['duration']
+    }
+    db.music.insert_one(musics)
+    
+    return jsonify({'message':'Music added successfully'})
+
+
+
+
 if __name__ == '__main__':
     app.run()
+
+
